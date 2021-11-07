@@ -20,12 +20,13 @@ def main():
 
 
     if delete is None:
-        print("key invalid")
+        print("delete invalid")
         return
 
     if delete == 'DELETE':
         data = {
             'delete': 'delete',
+            'version': version,
             'key': key,
         }
 
@@ -35,7 +36,7 @@ def main():
         soup = BeautifulSoup(html, 'html.parser')
         node = soup.select_one('.markdown-body')
 
-        version = response.url[response.url.rfind('/')+1:]
+        # version = response.url[response.url.rfind('/')+1:]
         data = {
             'version': version,
             'subject': str(node),
