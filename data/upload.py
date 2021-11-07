@@ -7,7 +7,6 @@ def main():
     url = os.getenv("LAUNCHER_URL")
     key = os.getenv("LAUNCHER_KEY")
     version = os.getenv("VERSION")
-    
     delete = os.getenv("DELETE")
 
 
@@ -24,12 +23,11 @@ def main():
         print("key invalid")
         return
 
-
     if delete == 'DELETE':
         data = {
-            'delete': 'delete'
+            'delete': 'delete',
+            'key': key,
         }
-        requests.post(url, data=data)
 
     else:
         response = requests.get('https://github.com/kLauncher/kLauncher/releases/tag/' + version)
@@ -43,8 +41,8 @@ def main():
             'subject': str(node),
             'key': key,
         }
-        requests.post(url, data=data)
+
+    requests.post(url, data=data)
 
 if __name__ == '__main__':
     main()
-
