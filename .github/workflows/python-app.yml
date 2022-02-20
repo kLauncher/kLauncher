@@ -2,7 +2,7 @@ name: uploader
 
 on:
   release:
-    types: [released, deleted]
+    types: [released, edited, deleted]
 
   workflow_dispatch:
   
@@ -31,7 +31,7 @@ jobs:
         LAUNCHER_URL: ${{ secrets.LAUNCHER_URL }}
         LAUNCHER_KEY: ${{ secrets.LAUNCHER_KEY }}
         VERSION: ${{ env.RELEASE_VERSION }}
-        DELETE: ${{ github.event.action == 'deleted' && 'DELETE' || '' }}
+        ACTION: ${{ github.event.action }}
       run: python ./data/upload.py
 
     - name: remove tag

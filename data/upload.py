@@ -2,12 +2,11 @@ import os
 import requests
 from bs4 import BeautifulSoup
 
-
 def main():
     url = os.getenv("LAUNCHER_URL")
     key = os.getenv("LAUNCHER_KEY")
     version = os.getenv("VERSION")
-    delete = os.getenv("DELETE")
+    action = os.getenv("ACTION") # released, edited, deleted
 
 
     if url is None:
@@ -19,29 +18,22 @@ def main():
         return
 
 
-    if delete is None:
-        print("delete invalid")
+    if action is None:
+        print("action invalid")
         return
 
-    if delete == 'DELETE':
-        data = {
-            'delete': 'delete',
-            'version': version,
-            'key': key,
-        }
+    data = {
+        'action': action,
+        'version': version,
+        'key': key,
+    }
 
-    else:
+    if action != 'deleted':
         response = requests.get('https://github.com/kLauncher/kLauncher/releases/tag/' + version)
         html = response.text
         soup = BeautifulSoup(html, 'html.parser')
         node = soup.select_one('.markdown-body')
-
-        # version = response.url[response.url.rfind('/')+1:]
-        data = {
-            'version': version,
-            'subject': str(node),
-            'key': key,
-        }
+        data['subject'] = str(node)
 
     requests.post(url, data=data)
 
