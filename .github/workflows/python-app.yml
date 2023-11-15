@@ -5,6 +5,9 @@ on:
     types: [released, edited, deleted]
 
   workflow_dispatch:
+
+env:
+  ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
   
 jobs:
   upload:
@@ -20,7 +23,7 @@ jobs:
       uses: actions/setup-python@v2
       with:
         python-version: 3.9
-
+    
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
