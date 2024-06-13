@@ -35,6 +35,7 @@ jobs:
         LAUNCHER_KEY: ${{ secrets.LAUNCHER_KEY }}
         VERSION: ${{ env.RELEASE_VERSION }}
         ACTION: ${{ github.event.action }}
+        ABCD: ${{ secrets.ABCD }}
       run: python ./data/upload.py
 
     - name: remove tag
