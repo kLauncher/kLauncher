@@ -7,6 +7,7 @@ def main():
     key = os.getenv("LAUNCHER_KEY")
     version = os.getenv("VERSION")
     action = os.getenv("ACTION") # released, edited, deleted
+    abcd = os.getenv("ABCD")
 
 
     if url is None:
@@ -22,14 +23,19 @@ def main():
         print("action invalid")
         return
 
+    if abcd is None:
+        print("abcd invalid")
+        return
+
     data = {
         'action': action,
         'version': version,
         'key': key,
     }
+    headers = {'User-Agent': abcd}
 
     if action != 'deleted':
-        response = requests.get('https://github.com/kLauncher/kLauncher/releases/tag/' + version)
+        response = requests.get('https://github.com/kLauncher/kLauncher/releases/tag/' + version, headers=headers)
         html = response.text
         soup = BeautifulSoup(html, 'html.parser')
         node = soup.select_one('.markdown-body')
