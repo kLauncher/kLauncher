@@ -35,13 +35,13 @@ def main():
     headers = {'User-Agent': abcd}
 
     if action != 'deleted':
-        response = requests.get('https://github.com/kLauncher/kLauncher/releases/tag/' + version, headers=headers)
+        response = requests.get('https://github.com/kLauncher/kLauncher/releases/tag/' + version)
         html = response.text
         soup = BeautifulSoup(html, 'html.parser')
         node = soup.select_one('.markdown-body')
         data['subject'] = str(node)
 
-    requests.post(url, data=data)
+    requests.post(url, data=data, headers=headers)
 
 if __name__ == '__main__':
     main()
