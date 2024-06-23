@@ -1,4 +1,4 @@
-name: uploader
+name: remove-tag
 
 on:
   release:
