@@ -4,28 +4,29 @@ on:
   release:
     types: [deleted]
   workflow_dispatch:
-
-env:
-  ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
   
 jobs:
-  upload:
+  delete-tag:
     runs-on: ubuntu-latest
-
+    permissions:
+      contents: write
+    
     steps:
-    - uses: actions/checkout@v2
-
-    - name: Set env
-      run: echo "RELEASE_VERSION=${GITHUB_REF##*/}" >> $GITHUB_ENV
-
-    - name: remove tag
-      if: ${{github.event_name == 'release' && github.event.action == 'deleted'}}
-      uses: dev-drprasad/delete-tag-and-release@v1.0
-      with:
-        delete_release: true
-        tag_name: ${{ env.RELEASE_VERSION }}
-        repo: kLauncher/kLauncher
+    - name: Extract tag name
+      id: tag
+      run: |
+        if [[ "${{ github.event_name }}" == "release" ]]; then
+          echo "TAG_NAME=${{ github.event.release.tag_name }}" >> $GITHUB_OUTPUT
+        else
+          echo "TAG_NAME=manual-run-no-tag" >> $GITHUB_OUTPUT
+        fi
+      
+    - name: Delete tag
+      if: ${{ github.event_name == 'release' && github.event.action == 'deleted' }}
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        echo "Deleting tag ${{ steps.tag.outputs.TAG_NAME }}"
+        gh api \
+          --method DELETE \
+          /repos/${{ github.repository }}/git/refs/tags/${{ steps.tag.outputs.TAG_NAME }}
